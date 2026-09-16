@@ -4,6 +4,13 @@ version = "0.1.0"
 edition = "2024"
 license = "GPL-2.0-only"
 authors = ["Milan Pramod <milanpramod123@gmail.com>"]
+description = "A fast tag-based task tracker CLI tool in Rust (clone of tatr)"
+readme = "README.md"
+repository = "https://github.com/shadowmkj/tatr-rs"
+homepage = "https://github.com/shadowmkj/tatr-rs"
+keywords = ["task-tracker", "cli", "tatr", "todo", "tags"]
+categories = ["command-line-utilities", "development-tools"]
+
 
 [dependencies]
 chrono = "0.4.45"
