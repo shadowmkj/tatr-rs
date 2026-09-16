@@ -25,6 +25,6 @@ fn main() {
 
     let lexer = Lexer::new(&query);
     let parser = tatr_rs::parser::Parser::new(lexer);
-    let tree = parser.parse();
-    println!("{tree:?}");
+    let (arena, root) = parser.parse();
+    tatr_rs::parser::print_tree(&arena, root);
 }

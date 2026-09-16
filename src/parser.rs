@@ -68,3 +68,30 @@ impl<'a> Parser<'a> {
         (self.arena, root)
     }
 }
+
+pub fn print_tree(arena: &Arena<Token>, root: Option<NodeId>) {
+    let Some(root) = root else {
+        println!("(empty)");
+        return;
+    };
+
+    println!("{}", arena[root].get());
+    let children: Vec<NodeId> = root.children(arena).collect();
+    for (i, &child) in children.iter().enumerate() {
+        let is_last = i == children.len() - 1;
+        print_node(arena, child, "", is_last);
+    }
+}
+
+fn print_node(arena: &Arena<Token>, node_id: NodeId, prefix: &str, is_last: bool) {
+    let marker = if is_last { "└── " } else { "├── " };
+    println!("{}{}{}", prefix, marker, arena[node_id].get());
+
+    let child_prefix = format!("{}{}", prefix, if is_last { "    " } else { "│   " });
+    let children: Vec<NodeId> = node_id.children(arena).collect();
+    for (i, &child) in children.iter().enumerate() {
+        let is_last_child = i == children.len() - 1;
+        print_node(arena, child, &child_prefix, is_last_child);
+    }
+}
+

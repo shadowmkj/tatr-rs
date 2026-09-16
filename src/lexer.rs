@@ -9,6 +9,19 @@ pub enum Token {
     INVALID,
 }
 
+impl std::fmt::Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Token::TAG(tag) => write!(f, "TAG({tag})"),
+            Token::OR => write!(f, "OR"),
+            Token::AND => write!(f, "AND"),
+            Token::NOT => write!(f, "NOT"),
+            Token::INVALID => write!(f, "INVALID"),
+        }
+    }
+}
+
+
 pub struct Lexer<'a> {
     src: Peekable<Chars<'a>>,
     buffer: String,
