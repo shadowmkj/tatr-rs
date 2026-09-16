@@ -6,7 +6,6 @@ use std::{
 
 use crate::DIRNAME;
 
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Task {
     pub id: String,
@@ -34,7 +33,6 @@ impl Task {
             body: body.into(),
         }
     }
-
 
     /// Formats the task into the Tatr Markdown specification.
     pub fn to_markdown(&self) -> String {
@@ -110,7 +108,6 @@ impl Task {
         })
     }
 
-
     /// Reads and parses `<dir>/TASK.md`, taking the folder name as the task ID.
     pub fn from_dir(dir_path: &Path) -> io::Result<Option<Self>> {
         let file_path = dir_path.join("TASK.md");
@@ -131,4 +128,3 @@ impl Task {
         self.tags.iter().cloned().collect()
     }
 }
-

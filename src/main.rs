@@ -56,10 +56,10 @@ fn main() {
             if let Ok(entries) = fs::read_dir(dir_path) {
                 for entry in entries.flatten() {
                     let path = entry.path();
-                    if path.is_dir() {
-                        if let Ok(Some(task)) = Task::from_dir(&path) {
-                            tasks.push(task);
-                        }
+                    if path.is_dir()
+                        && let Ok(Some(task)) = Task::from_dir(&path)
+                    {
+                        tasks.push(task);
                     }
                 }
             }
@@ -114,7 +114,7 @@ fn main() {
                 tags,
                 body.unwrap_or_default(),
             );
-            if let Ok(_) = task.save() {
+            if task.save().is_ok() {
                 println!("Saved");
             } else {
                 println!("{DIRNAME} directory not found run tatr init");

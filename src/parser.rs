@@ -94,4 +94,3 @@ fn print_node(arena: &Arena<Token>, node_id: NodeId, prefix: &str, is_last: bool
         print_node(arena, child, &child_prefix, is_last_child);
     }
 }
-

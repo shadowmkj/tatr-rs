@@ -1,6 +1,6 @@
 use chrono::Utc;
 
-pub const DIRNAME: &'static str = "issues";
+pub const DIRNAME: &str = "issues";
 
 pub fn generate_datetime_id() -> String {
     // Generates YYYYMMDD-HHMMSS-microseconds: 20260917-002514
