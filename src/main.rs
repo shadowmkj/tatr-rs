@@ -23,8 +23,8 @@ fn main() {
     let query = cli.query;
     println!("{query}");
 
-    let lexer = Lexer::new(&query.trim());
-    for token in lexer {
-        println!("Token: {token:?}");
-    }
+    let lexer = Lexer::new(&query);
+    let parser = tatr_rs::parser::Parser::new(lexer);
+    let tree = parser.parse();
+    println!("{tree:?}");
 }

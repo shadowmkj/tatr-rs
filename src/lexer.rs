@@ -1,3 +1,5 @@
+use std::{iter::Peekable, str::Chars};
+
 #[derive(Debug)]
 pub enum Token {
     TAG(String),
@@ -8,16 +10,14 @@ pub enum Token {
 }
 
 pub struct Lexer<'a> {
-    src: &'a str,
-    pos: usize,
+    src: Peekable<Chars<'a>>,
     buffer: String,
 }
 
 impl<'a> Lexer<'a> {
     pub fn new(src: &'a str) -> Self {
         Self {
-            src,
-            pos: 0,
+            src: src.chars().peekable(),
             buffer: String::with_capacity(256),
         }
     }
@@ -27,50 +27,33 @@ impl<'a> Iterator for Lexer<'a> {
     type Item = Token;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let mut tag_start = false;
-
-        while self.pos < self.src.len() {
-            let c = self
-                .src
-                .chars()
-                .nth(self.pos)
-                .expect("Error: invalid index"); // Guaranteed to not fail from above condition
-
+        while let Some(&c) = self.src.peek() {
             if c.is_whitespace() {
-                if self.buffer.len() > 0 {
-                    self.pos += 1;
-                    let value = match self.buffer.as_str() {
-                        "or" => Token::OR,
-                        "and" => Token::AND,
-                        "not" => Token::NOT,
-                        _ => Token::TAG(self.buffer.clone()),
-                    };
-                    self.buffer.clear();
-                    return Some(value);
-                }
+                self.src.next();
+            } else {
+                break;
             }
+        }
 
-            if c == '.' && !tag_start {
-                tag_start = true;
-                self.pos += 1;
-                continue;
+        self.src.peek()?; // Return NONE if EOF (Empty string provided)
+
+        self.buffer.clear();
+        while let Some(&c) = self.src.peek() {
+            if c.is_whitespace() {
+                break;
             }
-
             self.buffer.push(c);
-            self.pos += 1;
+            self.src.next();
         }
 
-        if !self.buffer.is_empty() {
-            let value = match self.buffer.as_str() {
-                "or" => Token::OR,
-                "and" => Token::AND,
-                "not" => Token::NOT,
-                _ => Token::TAG(self.buffer.clone()),
-            };
-            self.buffer.clear();
-            return Some(value);
-        }
+        let word = self.buffer.strip_prefix('.').unwrap_or(&self.buffer);
+        let token = match word {
+            "and" => Token::AND,
+            "or" => Token::OR,
+            "not" => Token::NOT,
+            _ => Token::TAG(word.to_string()),
+        };
 
-        None
+        Some(token)
     }
 }
