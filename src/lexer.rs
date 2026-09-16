@@ -21,7 +21,6 @@ impl std::fmt::Display for Token {
     }
 }
 
-
 pub struct Lexer<'a> {
     src: Peekable<Chars<'a>>,
     buffer: String,
@@ -59,7 +58,7 @@ impl<'a> Iterator for Lexer<'a> {
             self.src.next();
         }
 
-        let word = self.buffer.strip_prefix('.').unwrap_or(&self.buffer);
+        let word = self.buffer.strip_prefix(':').unwrap_or(&self.buffer);
         let token = match word {
             "and" => Token::AND,
             "or" => Token::OR,
