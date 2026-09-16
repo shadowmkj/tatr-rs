@@ -5,7 +5,7 @@
 
 A Rust implementation and clone of [tatr](https://github.com/tsoding/tatr) by [Tsoding](https://github.com/tsoding).
 
-`tatr` (Tag Tracker) is a tool designed to organize and query tasks, files, and items using tags and boolean expression queries.
+`tatr` (Task Tracker) is a tool designed to organize and query tasks, files, and items using tags and boolean expression queries.
 
 ## Implementation Progress
 
