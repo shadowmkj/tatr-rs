@@ -26,6 +26,9 @@ impl Vm {
                     let b = stack.pop().unwrap_or(false);
                     stack.push(a || b);
                 }
+                Instruction::UNTAGGED => {
+                    stack.push(tags.is_empty());
+                }
             }
         }
 

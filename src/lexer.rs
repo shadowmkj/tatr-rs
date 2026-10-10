@@ -3,6 +3,7 @@ use std::{iter::Peekable, str::Chars};
 #[derive(Debug)]
 pub enum Token {
     TAG(String),
+    UNTAGGED,
     OR,
     AND,
     NOT,
@@ -13,6 +14,7 @@ impl std::fmt::Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Token::TAG(tag) => write!(f, "TAG({tag})"),
+            Token::UNTAGGED => write!(f, "UNTAGGED"),
             Token::OR => write!(f, "OR"),
             Token::AND => write!(f, "AND"),
             Token::NOT => write!(f, "NOT"),
@@ -61,6 +63,7 @@ impl<'a> Iterator for Lexer<'a> {
         let word = self.buffer.strip_prefix(':').unwrap_or(&self.buffer);
         let token = match word {
             "and" => Token::AND,
+            "untagged" => Token::UNTAGGED,
             "or" => Token::OR,
             "not" => Token::NOT,
             _ => Token::TAG(word.to_string()),

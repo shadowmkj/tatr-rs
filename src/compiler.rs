@@ -12,6 +12,7 @@ pub enum Operation {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Instruction {
     PUSH(String),
+    UNTAGGED,
     APPLY(Operation),
 }
 
@@ -30,6 +31,12 @@ impl Compiler {
                         output.push(Instruction::APPLY(
                             op_stack.pop().expect("Won't panic since we checked last"),
                         ))
+                    }
+                }
+                Token::UNTAGGED => {
+                    output.push(Instruction::UNTAGGED);
+                    if let Some(Operation::NOT) = op_stack.last() {
+                        output.push(Instruction::UNTAGGED)
                     }
                 }
                 Token::NOT => {
@@ -86,6 +93,7 @@ impl Display for Instruction {
         match self {
             Instruction::PUSH(op) => writeln!(f, "PUSH({op})"),
             Instruction::APPLY(operation) => writeln!(f, "APPLY({operation})"),
+            Instruction::UNTAGGED => writeln!(f, "UNTAGGED"),
         }
     }
 }
