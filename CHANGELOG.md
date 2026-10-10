@@ -1,6 +1,13 @@
-## [v0.1.0](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.0) - 2026-09-16
+## [v0.1.1-beta.1](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.1) - 2026-10-10
 
-This is a pre-release with no testing done yet
+>[!NOTE]
+This is a pre-release for the `untagged` feature
+
+
+### 🚀 Features
+
+- Add untagged token support and cargo-dist configuration - ([faae3b1](https://github.com/shadowmkj/tatr-rs/commit/faae3b18df71918a47365f2a0d78afe1dfde303c)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+## [v0.1.0](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.0) - 2026-09-16
 
 ### 🚀 Features
 
@@ -22,6 +29,7 @@ This is a pre-release with no testing done yet
 - Update tatr acronym definition in README - ([66e4766](https://github.com/shadowmkj/tatr-rs/commit/66e4766350656ad3429e91182c4dda7f9cddba16)) (from [`@shadowmkj`](https://github.com/shadowmkj))
 - *(lexer)* Update tag prefix from dot to colon and refresh readme documentation - ([1809469](https://github.com/shadowmkj/tatr-rs/commit/1809469ecd1c4c3906de649f0ac1ff032d895892)) (from [`@shadowmkj`](https://github.com/shadowmkj))
 - Clean up code style and formatting - ([d622ba0](https://github.com/shadowmkj/tatr-rs/commit/d622ba0741165eacd05e15150e953adbd9ad44f2)) (from [`@shadowmkj`](https://github.com/shadowmkj))
+- *(release)* Add initial changelog for v0.1.0 - ([21a95a4](https://github.com/shadowmkj/tatr-rs/commit/21a95a429ea714585de902ac0cbf9c64523ff2bc)) (from [`@shadowmkj`](https://github.com/shadowmkj))
 
 ### 👥 New Contributors
 
