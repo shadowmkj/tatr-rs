@@ -268,20 +268,8 @@ mod tests {
         let _ = fs::remove_dir_all(&tmp_dir);
         fs::create_dir_all(&tmp_dir).unwrap();
 
-        let task1 = Task::new(
-            "20260916-111111",
-            "Task One",
-            80,
-            vec!["cli"],
-            "Body 1",
-        );
-        let task2 = Task::new(
-            "20260916-222222",
-            "Task Two",
-            90,
-            vec!["parser"],
-            "Body 2",
-        );
+        let task1 = Task::new("20260916-111111", "Task One", 80, vec!["cli"], "Body 1");
+        let task2 = Task::new("20260916-222222", "Task Two", 90, vec!["parser"], "Body 2");
 
         let dir1 = tmp_dir.join(&task1.id);
         fs::create_dir_all(&dir1).unwrap();
@@ -292,7 +280,9 @@ mod tests {
         fs::write(dir2.join("TASK.md"), task2.to_markdown()).unwrap();
 
         // Exact match
-        let found = Task::find_in_dir(&tmp_dir, "20260916-111111").unwrap().unwrap();
+        let found = Task::find_in_dir(&tmp_dir, "20260916-111111")
+            .unwrap()
+            .unwrap();
         assert_eq!(found.title, "Task One");
 
         // Unique prefix match
