@@ -18,6 +18,7 @@ A Rust implementation and clone of [tatr](https://github.com/tsoding/tatr) by [T
   - `init`: Initializes the task storage directory.
   - `new` / `add`: Creates a new task with title, priority (`-p`), tags (`-t`), and body.
   - `ls` / `list`: Lists tasks in canonical format, sorted by priority and date, with boolean query filtering (`-q`).
+  - `show` / `view`: Displays full details of a task by exact or partial ID, with optional raw markdown output (`-r`, `--raw`).
 - [x] **Test Data Generator (`examples/generate_tasks.rs`)**: Utility script to seed realistic test tasks with distinct timestamp IDs for testing query filters.
 
 ## Quick Start
@@ -47,7 +48,16 @@ cargo run -- new "Implement parser recovery" -p 90 -t "parser,bug" "Fix syntax e
 cargo run -- ls
 ```
 
-#### 4. Filter Tasks with Boolean Queries
+#### 4. Show Task Details
+```console
+# Show formatted task details by full or partial ID
+cargo run -- show 20260916-193927
+
+# Output raw markdown content
+cargo run -- show 193927 --raw
+```
+
+#### 5. Filter Tasks with Boolean Queries
 ```console
 # Filter tasks with boolean expressions
 cargo run -- ls -q ":parser and not :bug"

@@ -33,6 +33,14 @@ enum Command {
         tags: Vec<String>,
         body: Option<String>,
     },
+    #[command(name = "show", alias = "view")]
+    Show {
+        /// Task ID (supports full ID or partial prefix/substring)
+        id: String,
+        /// Print raw markdown content directly
+        #[arg(short, long)]
+        raw: bool,
+    },
 }
 
 #[derive(Parser, Debug)]
@@ -118,6 +126,29 @@ fn main() {
                 println!("Saved");
             } else {
                 println!("{DIRNAME} directory not found run tatr init");
+            }
+        }
+        Command::Show { id, raw } => {
+            let dir_path = Path::new(DIRNAME);
+            if !dir_path.exists() {
+                println!("{DIRNAME} directory does not exist. Run 'tatr init' first.");
+                return;
+            }
+
+            match Task::find(&id) {
+                Ok(Some(task)) => {
+                    if raw {
+                        println!("{}", task.to_markdown());
+                    } else {
+                        println!("{}", task.format_details());
+                    }
+                }
+                Ok(None) => {
+                    eprintln!("Task '{id}' not found.");
+                }
+                Err(e) => {
+                    eprintln!("{e}");
+                }
             }
         }
     }
