@@ -68,7 +68,7 @@ commit_parsers = [
   { message = "^fix", group = "<!-- 1 -->🐛 Bug Fixes" },
   { message = "^perf", group = "<!-- 2 -->⚡️ Performance" },
   { message = "^ci|^chore\\(ci\\)|^fix\\(ci\\)", group = "<!-- 3 -->👷 CI" },
-  { message = "^chore\\(release\\): prepare for", skip = true },
+  { message = "^chore\\(release\\)", skip = true },
   { message = "^chore\\(deps.*\\)", skip = true },
   { message = "^chore\\(pr\\)", skip = true },
   { message = "^chore\\(pull\\)", skip = true },
