@@ -1,6 +1,13 @@
+## [v0.1.1-beta.3](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.3) - 2026-10-10
+
+### 🚀 Features
+
+- *(task)* Add close and reopen commands with task search capabilities - ([2cae69d](https://github.com/shadowmkj/tatr-rs/commit/2cae69db282fdd3f86557b4b89d265cf48428f69)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+
+### ⚙️ Misc
+
+- *(task)* Format test code to improve readability - ([b8a21c2](https://github.com/shadowmkj/tatr-rs/commit/b8a21c291dc39d0c137004868e79584c404a90e1)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
 ## [v0.1.1-beta.2](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.2) - 2026-10-10
->[!NOTE]
-Added new `tatr show <ID>` command to view a single task
 
 ### 🚀 Features
 
@@ -9,6 +16,7 @@ Added new `tatr show <ID>` command to view a single task
 ### ⚙️ Misc
 
 - Ignore issues runtime directory - ([7eeb5d6](https://github.com/shadowmkj/tatr-rs/commit/7eeb5d634e68d23eb9cd89e69835f7b1a02b049e)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+- *(release)* Bump version to 0.1.1-beta.2 and update changelog - ([cbd78a6](https://github.com/shadowmkj/tatr-rs/commit/cbd78a6270ccb9adb5174da3c5324061636bb0da)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
 ## [v0.1.1-beta.1](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.1) - 2026-10-10
 
 ### 🚀 Features
