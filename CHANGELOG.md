@@ -1,12 +1,23 @@
-## [v0.1.1-beta.1](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.1) - 2026-10-10
-
+## [v0.1.1-beta.2](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.2) - 2026-10-10
 >[!NOTE]
-This is a pre-release for the `untagged` feature
+Added new `tatr show <ID>` command to view a single task
 
+### 🚀 Features
+
+- *(task)* Add show command for viewing task details by ID - ([79d7218](https://github.com/shadowmkj/tatr-rs/commit/79d7218641c13ff87e74369184b5ed92a93b00c5)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+
+### ⚙️ Misc
+
+- Ignore issues runtime directory - ([7eeb5d6](https://github.com/shadowmkj/tatr-rs/commit/7eeb5d634e68d23eb9cd89e69835f7b1a02b049e)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+## [v0.1.1-beta.1](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.1-beta.1) - 2026-10-10
 
 ### 🚀 Features
 
 - Add untagged token support and cargo-dist configuration - ([faae3b1](https://github.com/shadowmkj/tatr-rs/commit/faae3b18df71918a47365f2a0d78afe1dfde303c)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
+
+### ⚙️ Misc
+
+- *(release)* Bump version to 0.1.1-beta.1 and update changelog - ([a28d119](https://github.com/shadowmkj/tatr-rs/commit/a28d1192963892fea04900fbd872058f9fa9fee7)) (from [`@Milan Pramod`](https://github.com/Milan Pramod))
 ## [v0.1.0](https://github.com/shadowmkj/tatr-rs/releases/tag/v0.1.0) - 2026-09-16
 
 ### 🚀 Features
