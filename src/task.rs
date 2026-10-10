@@ -79,12 +79,81 @@ impl Task {
     }
 
     pub fn save(&self) -> io::Result<()> {
-        let dir_path: PathBuf = Path::new(DIRNAME).join(&self.id);
+        self.save_to_dir(Path::new(DIRNAME))
+    }
+
+    pub fn save_to_dir(&self, base_dir: &Path) -> io::Result<()> {
+        let dir_path: PathBuf = base_dir.join(&self.id);
         let file_path: PathBuf = dir_path.join("TASK.md");
         fs::create_dir_all(&dir_path)?;
         fs::write(file_path, self.to_markdown())?;
 
         Ok(())
+    }
+
+    /// Closes the task and persists the status change to disk in default issues directory.
+    pub fn close(&mut self) -> io::Result<()> {
+        self.close_in_dir(Path::new(DIRNAME))
+    }
+
+    /// Closes the task and persists the status change to disk in specified base directory.
+    pub fn close_in_dir(&mut self, base_dir: &Path) -> io::Result<()> {
+        self.status = "CLOSED".to_string();
+        self.save_to_dir(base_dir)
+    }
+
+    /// Reopens the task and persists the status change to disk in default issues directory.
+    pub fn reopen(&mut self) -> io::Result<()> {
+        self.reopen_in_dir(Path::new(DIRNAME))
+    }
+
+    /// Reopens the task and persists the status change to disk in specified base directory.
+    pub fn reopen_in_dir(&mut self, base_dir: &Path) -> io::Result<()> {
+        self.status = "OPEN".to_string();
+        self.save_to_dir(base_dir)
+    }
+
+    /// Finds a task in the default issues directory matching an exact or partial ID.
+    pub fn find(id_query: &str) -> Result<Option<Self>, FindTaskError> {
+        Self::find_in_dir(Path::new(DIRNAME), id_query)
+    }
+
+    /// Finds a task in the specified directory matching an exact or partial ID.
+    pub fn find_in_dir(base_dir: &Path, id_query: &str) -> Result<Option<Self>, FindTaskError> {
+        if !base_dir.exists() {
+            return Ok(None);
+        }
+
+        // 1. Try exact match first
+        let exact_path = base_dir.join(id_query);
+        if exact_path.is_dir()
+            && let Some(task) = Self::from_dir(&exact_path)?
+        {
+            return Ok(Some(task));
+        }
+
+        // 2. Scan for partial/prefix match
+        let mut matches = Vec::new();
+        for entry in fs::read_dir(base_dir)?.flatten() {
+            let path = entry.path();
+            if path.is_dir()
+                && let Some(name) = path.file_name().and_then(|n| n.to_str())
+                && name.contains(id_query)
+            {
+                matches.push((name.to_string(), path));
+            }
+        }
+
+        if matches.is_empty() {
+            Ok(None)
+        } else if matches.len() == 1 {
+            let (_, path) = matches.remove(0);
+            Ok(Self::from_dir(&path)?)
+        } else {
+            Err(FindTaskError::Ambiguous(
+                matches.into_iter().map(|(name, _)| name).collect(),
+            ))
+        }
     }
 
     /// Parses a Task from its folder ID and TASK.md content.
@@ -173,49 +242,6 @@ impl Task {
         out
     }
 
-    /// Finds a task in the default issues directory matching an exact or partial ID.
-    pub fn find(id_query: &str) -> Result<Option<Self>, FindTaskError> {
-        Self::find_in_dir(Path::new(DIRNAME), id_query)
-    }
-
-    /// Finds a task in the specified directory matching an exact or partial ID.
-    pub fn find_in_dir(base_dir: &Path, id_query: &str) -> Result<Option<Self>, FindTaskError> {
-        if !base_dir.exists() {
-            return Ok(None);
-        }
-
-        // 1. Try exact match first
-        let exact_path = base_dir.join(id_query);
-        if exact_path.is_dir()
-            && let Some(task) = Self::from_dir(&exact_path)?
-        {
-            return Ok(Some(task));
-        }
-
-        // 2. Scan for partial/prefix match
-        let mut matches = Vec::new();
-        for entry in fs::read_dir(base_dir)?.flatten() {
-            let path = entry.path();
-            if path.is_dir()
-                && let Some(name) = path.file_name().and_then(|n| n.to_str())
-                && name.contains(id_query)
-            {
-                matches.push((name.to_string(), path));
-            }
-        }
-
-        if matches.is_empty() {
-            Ok(None)
-        } else if matches.len() == 1 {
-            let (_, path) = matches.remove(0);
-            Ok(Self::from_dir(&path)?)
-        } else {
-            Err(FindTaskError::Ambiguous(
-                matches.into_iter().map(|(name, _)| name).collect(),
-            ))
-        }
-    }
-
     /// Returns the task's tags as a HashSet for evaluation with Vm.
     pub fn tag_set(&self) -> HashSet<String> {
         self.tags.iter().cloned().collect()
@@ -263,6 +289,47 @@ mod tests {
     }
 
     #[test]
+    fn test_task_close_and_reopen() {
+        let tmp_dir = std::env::temp_dir().join("tatr_test_close_reopen");
+        let _ = fs::remove_dir_all(&tmp_dir);
+        fs::create_dir_all(&tmp_dir).unwrap();
+
+        let mut task = Task::new(
+            "20261011-000001",
+            "Test Close/Reopen Task",
+            80,
+            vec!["test"],
+            "Testing status transitions",
+        );
+        assert_eq!(task.status, "OPEN");
+
+        // Save initially
+        task.save_to_dir(&tmp_dir).unwrap();
+
+        // Close the task
+        task.close_in_dir(&tmp_dir).unwrap();
+        assert_eq!(task.status, "CLOSED");
+
+        // Verify persisted state
+        let reloaded = Task::find_in_dir(&tmp_dir, "20261011-000001")
+            .unwrap()
+            .unwrap();
+        assert_eq!(reloaded.status, "CLOSED");
+
+        // Reopen the task
+        task.reopen_in_dir(&tmp_dir).unwrap();
+        assert_eq!(task.status, "OPEN");
+
+        // Verify persisted state again
+        let reloaded2 = Task::find_in_dir(&tmp_dir, "20261011-000001")
+            .unwrap()
+            .unwrap();
+        assert_eq!(reloaded2.status, "OPEN");
+
+        let _ = fs::remove_dir_all(&tmp_dir);
+    }
+
+    #[test]
     fn test_find_exact_and_prefix() {
         let tmp_dir = std::env::temp_dir().join("tatr_test_show_find");
         let _ = fs::remove_dir_all(&tmp_dir);
@@ -271,13 +338,8 @@ mod tests {
         let task1 = Task::new("20260916-111111", "Task One", 80, vec!["cli"], "Body 1");
         let task2 = Task::new("20260916-222222", "Task Two", 90, vec!["parser"], "Body 2");
 
-        let dir1 = tmp_dir.join(&task1.id);
-        fs::create_dir_all(&dir1).unwrap();
-        fs::write(dir1.join("TASK.md"), task1.to_markdown()).unwrap();
-
-        let dir2 = tmp_dir.join(&task2.id);
-        fs::create_dir_all(&dir2).unwrap();
-        fs::write(dir2.join("TASK.md"), task2.to_markdown()).unwrap();
+        task1.save_to_dir(&tmp_dir).unwrap();
+        task2.save_to_dir(&tmp_dir).unwrap();
 
         // Exact match
         let found = Task::find_in_dir(&tmp_dir, "20260916-111111")

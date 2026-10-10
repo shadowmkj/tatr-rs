@@ -41,6 +41,16 @@ enum Command {
         #[arg(short, long)]
         raw: bool,
     },
+    #[command(name = "close", alias = "done")]
+    Close {
+        /// Task ID (supports full ID or partial prefix/substring)
+        id: String,
+    },
+    #[command(name = "reopen", alias = "open")]
+    Reopen {
+        /// Task ID (supports full ID or partial prefix/substring)
+        id: String,
+    },
 }
 
 #[derive(Parser, Debug)]
@@ -149,6 +159,50 @@ fn main() {
                 Err(e) => {
                     eprintln!("{e}");
                 }
+            }
+        }
+        Command::Close { id } => {
+            let dir_path = Path::new(DIRNAME);
+            if !dir_path.exists() {
+                println!("{DIRNAME} directory does not exist. Run 'tatr init' first.");
+                return;
+            }
+
+            match Task::find(&id) {
+                Ok(Some(mut task)) => {
+                    if task.status == "CLOSED" {
+                        println!("Task '{}' is already CLOSED.", task.id);
+                    } else {
+                        match task.close() {
+                            Ok(()) => println!("Closed task {}: {}", task.id, task.title),
+                            Err(e) => eprintln!("Failed to update task: {e}"),
+                        }
+                    }
+                }
+                Ok(None) => eprintln!("Task '{id}' not found."),
+                Err(e) => eprintln!("{e}"),
+            }
+        }
+        Command::Reopen { id } => {
+            let dir_path = Path::new(DIRNAME);
+            if !dir_path.exists() {
+                println!("{DIRNAME} directory does not exist. Run 'tatr init' first.");
+                return;
+            }
+
+            match Task::find(&id) {
+                Ok(Some(mut task)) => {
+                    if task.status == "OPEN" {
+                        println!("Task '{}' is already OPEN.", task.id);
+                    } else {
+                        match task.reopen() {
+                            Ok(()) => println!("Reopened task {}: {}", task.id, task.title),
+                            Err(e) => eprintln!("Failed to update task: {e}"),
+                        }
+                    }
+                }
+                Ok(None) => eprintln!("Task '{id}' not found."),
+                Err(e) => eprintln!("{e}"),
             }
         }
     }
