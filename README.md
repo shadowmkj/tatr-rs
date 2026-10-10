@@ -18,6 +18,8 @@ A Rust implementation and clone of [tatr](https://github.com/tsoding/tatr) by [T
   - `init`: Initializes the task storage directory.
   - `new` / `add`: Creates a new task with title, priority (`-p`), tags (`-t`), and body.
   - `ls` / `list`: Lists tasks in canonical format, sorted by priority and date, with boolean query filtering (`-q`).
+  - `close` / `done`: Marks a task as `CLOSED`.
+  - `reopen` / `open`: Restores a task to `OPEN` status.
 - [x] **Test Data Generator (`examples/generate_tasks.rs`)**: Utility script to seed realistic test tasks with distinct timestamp IDs for testing query filters.
 
 ## Quick Start
@@ -47,7 +49,16 @@ cargo run -- new "Implement parser recovery" -p 90 -t "parser,bug" "Fix syntax e
 cargo run -- ls
 ```
 
-#### 4. Filter Tasks with Boolean Queries
+#### 4. Close or Reopen Tasks
+```console
+# Close a task by ID (or partial ID)
+cargo run -- close 20260916-193927
+
+# Reopen a task
+cargo run -- reopen 193927
+```
+
+#### 5. Filter Tasks with Boolean Queries
 ```console
 # Filter tasks with boolean expressions
 cargo run -- ls -q ":parser and not :bug"
